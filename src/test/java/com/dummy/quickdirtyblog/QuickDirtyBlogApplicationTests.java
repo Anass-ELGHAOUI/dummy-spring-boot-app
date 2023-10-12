@@ -1,19 +1,13 @@
 package com.dummy.quickdirtyblog;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import com.dummy.quickdirtyblog.entities.BlogEntity;
 import com.dummy.quickdirtyblog.model.BlogData;
-import com.dummy.quickdirtyblog.repositories.AuthorRepository;
-import com.dummy.quickdirtyblog.repositories.BlogRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -51,20 +45,18 @@ class QuickDirtyBlogApplicationTests {
     client = new TestsUtils.Client(serverPort);
   }
 
-  @MockBean BlogRepository blogRepository;
-  @MockBean AuthorRepository authorRepository;
-
   @Test
   void should_save_blog() {
     // GIVEN
     BlogData blogData = BlogData.builder().title("test").content("content").draft(false).build();
 
     // WHEN
-    when(blogRepository.save(any()))
-        .thenReturn(BlogEntity.builder().title("test").content("content").draft(false).build());
+    BlogData res = client.postBlog(blogData);
 
     // THEN
-    BlogData res = client.postBlog(blogData);
-    assertThat(res).usingRecursiveComparison().isEqualTo(blogData);
+    assertThat(res)
+        .hasFieldOrPropertyWithValue("title", "test")
+        .hasFieldOrPropertyWithValue("content", "content")
+        .hasFieldOrPropertyWithValue("draft", false);
   }
 }

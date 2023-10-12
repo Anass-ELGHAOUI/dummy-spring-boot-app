@@ -51,7 +51,6 @@ public class BlogEntity {
 
   private boolean draft;
 
-  @Id
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "author_id", updatable = false, nullable = false)
   private AuthorEntity author;
