@@ -33,7 +33,7 @@ public class TestsUtils {
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<BlogData> request = new HttpEntity<>(blogData, headers);
       return assertSuccess(
-          rest.exchange("/quick-dirty-blog/blog/v1/blogs", POST, request, BlogData.class), 201);
+          rest.exchange("/api/v1/blogs", POST, request, BlogData.class), 201);
     }
 
     public static <T> T assertSuccess(ResponseEntity<T> resp, int responseCodeExpected) {

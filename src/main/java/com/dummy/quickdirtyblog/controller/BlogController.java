@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/quick-dirty-blog/blog/v1")
+@RequestMapping("/api/v1")
 public class BlogController {
 
   private final BlogService blogService;
