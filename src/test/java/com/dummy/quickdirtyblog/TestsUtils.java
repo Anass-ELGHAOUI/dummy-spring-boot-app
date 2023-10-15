@@ -13,27 +13,21 @@ import org.springframework.web.client.RestTemplate;
 
 public class TestsUtils {
 
-  public static final class Client {
-
-    private final RestTemplate rest;
-
-    public Client(RestTemplateBuilder rest) {
-      this.rest = rest.build();
-    }
+  public record Client(RestTemplate rest) {
 
     public Client(int serverPort) {
       this(
           new RestTemplateBuilder()
               .rootUri("http://localhost:" + serverPort)
-              .defaultHeader("username", "guest"));
+              .defaultHeader("username", "guest")
+              .build());
     }
 
     public BlogData postBlog(BlogData blogData) {
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       HttpEntity<BlogData> request = new HttpEntity<>(blogData, headers);
-      return assertSuccess(
-          rest.exchange("/api/v1/blogs", POST, request, BlogData.class), 201);
+      return assertSuccess(rest.exchange("/api/v1/blogs", POST, request, BlogData.class), 201);
     }
 
     public static <T> T assertSuccess(ResponseEntity<T> resp, int responseCodeExpected) {
