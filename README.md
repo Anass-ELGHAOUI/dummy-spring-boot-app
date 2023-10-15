@@ -1,4 +1,4 @@
-# dummy-app
+# dummy-spring-boot-app
 this is a dummy blog backend app, the objective here is to develop a dummy app on which I will use different technologies I've learned during my experiences and also by using the best practices in each technology.
 
 ## technologies that have been used until this moment:
