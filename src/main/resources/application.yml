@@ -17,13 +17,11 @@ spring:
         format_sql: true
     show-sql: true
 
-  profiles:
-    active: secure
-
 
 okta:
   oauth2:
-    client-id: { client-id }
-    client-secret: { client-secret }
+    client-id: 0oacrgc10mg4oFiMH5d7
+    client-secret: 6TUdnNK_c4gI5SvT8IgdfC-EO_6hVdMnH8DIYhGPmOLYuFgAYJsWDKRz_TjmFFrn
     issuer: https://dev-97471282.okta.com/oauth2/default
     scopes: openid, email, profile
+    redirect-uri: /authorization-code/callback

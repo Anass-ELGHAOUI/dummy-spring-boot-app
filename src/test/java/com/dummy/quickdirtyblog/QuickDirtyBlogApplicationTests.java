@@ -18,7 +18,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = {QuickDirtyBlogApplication.class})
-@ActiveProfiles({"test", "notSecure"})
+@ActiveProfiles({"test"})
 @Import(TestConf.class)
 class QuickDirtyBlogApplicationTests {
   private static final Logger log = LoggerFactory.getLogger(QuickDirtyBlogApplicationTests.class);

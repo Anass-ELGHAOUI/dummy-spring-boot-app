@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlogRepository extends JpaRepository<BlogEntity, Long> {
 
-  Page<BlogEntity> findByTitleContainingIgnoreCase(String title, PageRequest pageRequest);
+  Page<BlogEntity> findByTitleContainingIgnoreCaseAndDraftEquals(
+      String title, boolean draft, PageRequest pageRequest);
 
-  Page<BlogEntity> findAllByDraftFalse(PageRequest pageRequest);
+  Page<BlogEntity> findAllByDraftEquals(boolean draft, PageRequest pageRequest);
 }

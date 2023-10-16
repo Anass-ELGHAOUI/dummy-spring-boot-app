@@ -1,11 +1,13 @@
 package com.dummy.quickdirtyblog.entities;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +27,9 @@ public class AuthorEntity {
   @Column(name = "author_id")
   private Long id;
 
-  private String firstName;
-  private String lastName;
+  private String name;
+  private String email;
+
+  @ElementCollection(targetClass = String.class)
+  private List<String> roles;
 }
