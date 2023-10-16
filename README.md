@@ -1,16 +1,45 @@
-# dummy-spring-boot-app
-this is a dummy blog backend app, the objective here is to develop a dummy app on which I will use different technologies I've learned during my experiences and also by using the best practices in each technology.
+# Dummy Spring Boot Blog Backend
 
-## technologies that have been used until this moment:
-- Java 17 with the usage of records and pattern matching
-- Spring boot 3 as java framework
-- Spring data jpa
-- PostgreSql as a sql database
-- Spring security using OpenId and OAuth2 (okta)
-- usage of springdoc-openapi-ui to expose the swagger documentation
-- integration test with the usage of Rest template
-- TestContainers to run a PostgreSql image locally when starting the integration test
-- assertj library and mockito for the test part
+## Project Overview
+
+**Dummy Spring Boot Blog Backend** is an experimental project designed to serve as a testing ground for various technologies and best practices. It provides an opportunity to apply knowledge gained from practical experiences and to explore cutting-edge technologies within a real-world project context. Focused on creating a simple blog backend, this project showcases skills and fosters a dynamic learning environment.
+
+## Key Features
+
+- **Programming Language:** Java 17, with records and pattern matching.
+- **Java Framework:** Spring Boot 3.
+- **Data Management:** Spring Data JPA.
+- **Database:** PostgreSQL for reliable SQL data storage.
+- **Security:** Spring Security with OpenID and OAuth2 integration (Okta).
+- **API Documentation:** Swagger documentation via springdoc-openapi-ui.
+- **Integration Testing:** Comprehensive testing with RestTemplate.
+- **Dockerized Testing:** Utilizing TestContainers for local PostgreSQL container deployment.
+- **Testing Libraries:** AssertJ and Mockito for rigorous testing.
+
+## Current Technology Stack
+
+- **Programming Language:** Java 17.
+- **Framework:** Spring Boot 3.1.2.
+- **Data Access:** Spring Data JPA.
+- **Database:** PostgreSQL.
+- **Security:** Spring Security with OpenID and OAuth2 (Okta).
+- **Documentation:** Swagger with springdoc-openapi-ui.
+- **Integration Testing:** RestTemplate.
+- **Docker:** TestContainers for local PostgreSQL image.
+- **Testing Libraries:** AssertJ and Mockito.
+
+## Project Goals
+
+This project serves as an ongoing exploration of innovative technologies and best practices, applied to create a fully functional blog backend. Key objectives include:
+
+- Showcasing the use of Java 17's features, such as records and pattern matching.
+- Illustrating the power of Spring Boot 3.1.2 for building robust applications.
+- Demonstrating the seamless integration of Spring Data JPA with PostgreSQL.
+- Highlighting strong security features through Spring Security, OpenID, and OAuth2 (Okta).
+- Providing extensive API documentation with Swagger and springdoc-openapi-ui.
+- Conducting rigorous integration testing using RestTemplate.
+- Ensuring consistency and reliability with Dockerized testing through TestContainers.
+- Maintaining code quality and confidence through AssertJ and Mockito testing libraries.
 
 ## Dockerfile
 I have created a Dockerfile for the curent application. Exemple of the content of Dockerfile is shown bellow, please do not forget to run the maven build before creating your image: 
