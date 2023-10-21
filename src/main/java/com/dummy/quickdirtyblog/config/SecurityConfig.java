@@ -1,22 +1,23 @@
 package com.dummy.quickdirtyblog.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,43 +25,43 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Slf4j
 @Profile("!test")
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-  private final ClientRegistrationRepository clientRegistrationRepository;
+  private final JwtAuthConverter jwtAuthConverter;
+  private final KeycloakLogoutHandler keycloakLogoutHandler;
 
-  public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository) {
-    this.clientRegistrationRepository = clientRegistrationRepository;
+  public SecurityConfig(
+      JwtAuthConverter jwtAuthConverter, KeycloakLogoutHandler keycloakLogoutHandler) {
+    this.jwtAuthConverter = jwtAuthConverter;
+    this.keycloakLogoutHandler = keycloakLogoutHandler;
   }
 
-  OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
-    OidcClientInitiatedLogoutSuccessHandler successHandler =
-        new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-    successHandler.setPostLogoutRedirectUri("http://localhost:8080/swagger-ui/index.html");
-    return successHandler;
+  @Bean
+  protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+    return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
   }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.authorizeHttpRequests(
+    return http.csrf(CsrfConfigurer::disable)
+        .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/swagger-ui/index.html")
-                    .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/v1/blogs/{id}")
-                    .permitAll()
-                    .requestMatchers("/api/v1/authors")
+                auth.requestMatchers(HttpMethod.GET, "/api/v1/blogs/{id}")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-        .csrf(AbstractHttpConfigurer::disable)
         .headers(
             httpSecurityHeadersConfigurer ->
                 httpSecurityHeadersConfigurer.frameOptions(
                     HeadersConfigurer.FrameOptionsConfig::disable))
-        .formLogin(AbstractHttpConfigurer::disable)
-        .oauth2Login(withDefaults())
-        .logout(logout -> logout.logoutSuccessHandler(oidcLogoutSuccessHandler()))
-        .oauth2ResourceServer(resource -> resource.jwt(withDefaults()))
+        .oauth2Login(Customizer.withDefaults())
+        .logout(
+            logout ->
+                logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/api/v1/blogs"))
+        .oauth2ResourceServer(
+            authServer -> authServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
         .build();
   }
 

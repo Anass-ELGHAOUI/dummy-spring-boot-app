@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import com.dummy.quickdirtyblog.entities.AuthorEntity;
 import com.dummy.quickdirtyblog.entities.BlogEntity;
 import com.dummy.quickdirtyblog.exceptions.BlogNotFoundException;
+import com.dummy.quickdirtyblog.exceptions.OperationNotAllowedException;
 import com.dummy.quickdirtyblog.model.AuthorData;
 import com.dummy.quickdirtyblog.model.BlogData;
 import com.dummy.quickdirtyblog.repositories.BlogRepository;
@@ -16,7 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -48,13 +50,14 @@ public class BlogService {
     return blogEntity.get().map(BlogDataMapper::convertBlogEntity).toList();
   }
 
-  public BlogData postBlog(BlogData blog, OAuth2User principal) {
+  public BlogData postBlog(BlogData blog) {
     log.info("Start saving {}", blog);
-    String name = principal.getName();
-    String email = principal.getAttribute("email");
-    List<String> roles = principal.getAttribute("roles");
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      throw new OperationNotAllowedException("Unable to create the blog, user not authenticated");
+    }
     AuthorEntity authorEntity =
-        authorService.getAuthor(AuthorData.builder().name(name).email(email).roles(roles).build());
+        authorService.getAuthor(AuthorData.builder().name(authentication.getName()).build());
     return convertBlogEntity(
         blogRepository.save(
             BlogDataMapper.convertBlogData(blog).toBuilder().author(authorEntity).build()));

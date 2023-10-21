@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class QuickDirtyBlogApplication {
 
   public static void main(String[] args) {
+    System.setProperty("spring.config.name", "application-standalone");
     SpringApplication.run(QuickDirtyBlogApplication.class, args);
   }
 }

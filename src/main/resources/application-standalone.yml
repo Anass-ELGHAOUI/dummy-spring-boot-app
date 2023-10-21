@@ -1,0 +1,43 @@
+server:
+  port: 8081
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/dirty-blog
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak:
+            authorization-grant-type: authorization_code
+            client-id: dirty-blog-rest-api
+            provider: keycloak
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/dirty-blog
+            user-name-attribute: preferred_username
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dummy-app
+    driver-class-name: org.postgresql.Driver
+    username: dummy-app
+    password: dummy-app
+
+  jpa:
+    # JPA / HIBERNATE
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+jwt:
+  auth:
+    converter:
+      application-id: dirty-blog-rest-api
+      principal-attribute: preferred_username

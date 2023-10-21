@@ -22,8 +22,6 @@ public class AuthorDataMapper {
     return AuthorEntity.builder()
         .id(authorData.id())
         .name(authorData.name())
-        .email(authorData.email())
-        .roles(authorData.roles())
         .build();
   }
 }

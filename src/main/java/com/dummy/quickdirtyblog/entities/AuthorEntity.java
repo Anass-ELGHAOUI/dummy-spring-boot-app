@@ -28,8 +28,4 @@ public class AuthorEntity {
   private Long id;
 
   private String name;
-  private String email;
-
-  @ElementCollection(targetClass = String.class)
-  private List<String> roles;
 }

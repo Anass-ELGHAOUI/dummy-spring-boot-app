@@ -6,6 +6,8 @@ import com.dummy.quickdirtyblog.model.BlogData;
 import com.dummy.quickdirtyblog.service.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+
+import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,8 +41,8 @@ public class BlogController {
   @Operation(summary = "Save a new blog in db.")
   @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<BlogData> postBlog(
-      @Valid @RequestBody BlogData blogData, @AuthenticationPrincipal OAuth2User principal) {
-    return new ResponseEntity<>(blogService.postBlog(blogData, principal), HttpStatus.CREATED);
+          @Valid @RequestBody BlogData blogData) {
+    return new ResponseEntity<>(blogService.postBlog(blogData), HttpStatus.CREATED);
   }
 
   @Operation(summary = "Search blogs by title with pagination.")
