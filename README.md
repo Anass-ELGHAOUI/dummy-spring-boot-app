@@ -45,20 +45,22 @@ This project serves as an ongoing exploration of innovative technologies and bes
 I have created a Dockerfile for the current application. Example of the content of Dockerfile is shown bellow, please do not forget to run the maven build before creating your image: 
  
 ```
-# Use the official AdoptOpenJDK 17 image as the base image
-FROM adoptopenjdk/openjdk17:alpine-slim
+# Use the official openjdk 17 image as the base image
+FROM openjdk:17-jdk-slim
+
+COPY --chown=1000:0 maven/app /etc/app
+ONBUILD COPY --chown=1000:0 maven/app /etc/app
 
 # Set the working directory in the container
-WORKDIR /app
-
-# Copy the Spring Boot application JAR file into the container
-COPY target/quickdirtyblog-webapp-0.0.1-SNAPSHOT.jar /app/app.jar
+WORKDIR /etc/app
 
 # Expose the port your Spring Boot application will listen on
 EXPOSE 8081
 
+ONBUILD HEALTHCHECK CMD curl --fail "http://localhost:$APPLICATION_PORT/health" || exit 1
+
 # Define the command to run your Spring Boot application
-ENTRYPOINT [ "java", "-jar", "app.jar"]
+ENTRYPOINT [ "java", "-jar", "quickdirtyblog-webapp-0.0.1-SNAPSHOT.jar"]
 ```
 
 ## How to run
@@ -67,7 +69,7 @@ first step is use the compose-local-test.yml file to spin PostgreSql server, and
 ```
 docker compose -f compose-local-test.yml up -d
 ```
-after connecting to keycloak admin from http://localhost:8080/admin you can create a new realm (name it dirty-blog) by importing the file dummy-app/src/main/resources/realm-export.json then create a new user.
+new realm called dirty-blog is imported automatically when running keycloak service
 
 then run the QuickDirtyBlogApplication.java or alternatively you can build a Docker image from the project Dockerfile, make sure you have Docker installed and navigate to the directory containing the Dockerfile and your Spring Boot application JAR file. Then, run the following command:
 

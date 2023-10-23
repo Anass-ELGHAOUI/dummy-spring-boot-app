@@ -109,4 +109,57 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>docker</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.43.4</version> <!-- Use the latest version -->
+                        <executions>
+                            <execution>
+                                <id>build-docker-image</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>dirty-blog:${project.version}</name>
+                                    <build>
+                                        <dockerFile>Dockerfile</dockerFile>
+                                        <args>
+                                            <APPLICATION_PORT>8081</APPLICATION_PORT>
+                                        </args>
+                                        <assembly>
+                                            <descriptorRef>artifact</descriptorRef>
+                                            <inline>
+                                                <includeBaseDirectory>false</includeBaseDirectory>
+                                                <files>
+                                                    <file>
+                                                        <source>${project.build.directory}/quickdirtyblog-webapp-${project.version}.jar</source>
+                                                        <outputDirectory>\app</outputDirectory>
+                                                    </file>
+                                                    <file>
+                                                        <source>src/main/resources/log4j2.xml</source>
+                                                        <outputDirectory>\app</outputDirectory>
+                                                    </file>
+                                                </files>
+                                            </inline>
+                                        </assembly>
+                                    </build>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
