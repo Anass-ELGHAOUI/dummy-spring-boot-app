@@ -64,22 +64,21 @@ ENTRYPOINT [ "java", "-jar", "quickdirtyblog-webapp-0.0.1-SNAPSHOT.jar"]
 ```
 
 ## How to run
-first step is use the compose-local-test.yml file to spin PostgreSql server, and keycloak:
+first step is to build the project using ```mvn clean package -P docker -DskipTests``` to be able to build the project docker image as well.
+then you need to start the docker compose file src/main/docker/compose-local-test.yml file to spin PostgreSql server, and keycloak:
 
 ```
-docker compose -f compose-local-test.yml up -d
+docker compose -f src/main/docker/compose-local-test.yml up -d
 ```
-new realm called dirty-blog is imported automatically when running keycloak service
+new realm called dirty-blog is imported automatically when running keycloak service, once it started you can navigate to http://localhost:8080/admin to create your user (user admin/admin to authenticate in keycloak admin page).
 
-then run the QuickDirtyBlogApplication.java or alternatively you can build a Docker image from the project Dockerfile, make sure you have Docker installed and navigate to the directory containing the Dockerfile and your Spring Boot application JAR file. Then, run the following command:
 
-```
-docker build -t your-image-name:your-tag .
-```
-Replace your-image-name and your-tag with the desired name and tag for your Docker image. Once the image is built, you can run it with:
+then run the QuickDirtyBlogApplication.java or alternatively you can create a container from the project image that have been created using maven, make sure you have Docker installed. Then, run the following command:
+
+you can run it with:
 
 ```
-docker run -dp 8081:8081 your-image-name:your-tag
+docker run -dp 8081:8081 dirty-blog:0.0.1-SNAPSHOT
 ```
 ## API Definition
 Access the definition page: http://localhost:8081/swagger-ui/index.html
